@@ -1,0 +1,68 @@
+name: Deploy Pipeline
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  test-and-deploy:
+    runs-on: ubuntu-latest
+
+    env:
+      PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+      REGION: us-central1
+      IMAGE_NAME: sephora-rh-project
+      ARTIFACT_REPO: sephora
+      JAR_NAME: sephora-data-platform.jar
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Build and test
+        run: mvn clean verify
+
+      - name: Create service account key file
+        run: echo '${{ secrets.GCP_SA_KEY }}' > $HOME/gcp-key.json
+
+      - name: Install gcloud
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Authenticate gcloud
+        run: gcloud auth activate-service-account --key-file=$HOME/gcp-key.json
+
+      - name: Set gcloud project
+        run: gcloud config set project $PROJECT_ID
+
+      - name: Package JAR
+        run: mvn clean package -DskipTests
+
+      - name: Rename JAR
+        run: |
+          JAR_PATH=$(ls target/*.jar | head -n 1)
+          cp "$JAR_PATH" "${{ env.JAR_NAME }}"
+
+      - name: Upload JAR to GCS
+        run: |
+          gcloud storage cp "${{ env.JAR_NAME }}" "gs://${{ secrets.GCS_ARTIFACT_BUCKET }}/jars/${{ env.JAR_NAME }}"
+
+      - name: Configure Docker auth for Artifact Registry
+        run: gcloud auth configure-docker "${{ env.REGION }}-docker.pkg.dev" --quiet
+
+      - name: Build Docker image
+        run: |
+          docker build -t "${{ env.REGION }}-docker.pkg.dev/$PROJECT_ID/${{ env.ARTIFACT_REPO }}/${{ env.IMAGE_NAME }}:latest" .
+
+      - name: Push Docker image
+        run: |
+          docker push "${{ env.REGION }}-docker.pkg.dev/$PROJECT_ID/${{ env.ARTIFACT_REPO }}/${{ env.IMAGE_NAME }}:latest"
+
+      - name: Upload Airflow DAG
+        run: |
+          gcloud storage cp airflow/dags/rh_employees_flow_dag.py "gs://${{ secrets.COMPOSER_BUCKET }}/dags/"
+          gcloud storage cp airflow/config/rh_flow_config.json "gs://${{ secrets.COMPOSER_BUCKET }}/dags/config/"

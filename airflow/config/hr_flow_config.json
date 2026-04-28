@@ -1,0 +1,29 @@
+{
+  "project_id": "sephora-rh-project",
+  "region": "us-central1",
+  "bq_location": "US",
+  "gcp_conn_id": "google_cloud_default",
+
+  "bucket": "your-hr-bucket",
+  "jar_gcs_path": "gs://sephora-artifact/jars/sephora-data-platform.jar",
+
+  "employees_full_input": "gs://raw-sephora-rh-aayari/full/employees_full.csv",
+  "employees_delta_input": "gs://raw-sephora-rh-aayari/delta/employees_delta.json",
+
+  "raw_employees_table": "sephora-rh-project:sephora_raw_dev.raw_employees",
+  "raw_employees_delta_staging_table": "sephora-rh-project:sephora_raw_dev.raw_employees_delta_staging",
+  "raw_stores_table": "sephora-rh-project:sephora_raw_dev.raw_stores",
+
+  "backup_full": "gs://sephora-buckup/backup/hr/full/employees",
+  "backup_delta": "gs://sephora-buckup/backup/hr/delta/employees",
+
+  "temp_location": "gs://sephora-staging/tmp",
+  "staging_location": "gs://sephora-staging/staging",
+
+  "employee_job_class": "com.sephora.data.beam.EmployeeIngestionPipeline",
+
+  "dataform_repository_id": "sephora-rh-dataform",
+  "dataform_git_ref": "main",
+
+  "quality_min_raw_stores_count": 1
+}
