@@ -1,0 +1,78 @@
+[
+  {
+    "action": "INSERT",
+    "timestamp": "2025-01-15T10:30:00Z",
+    "id": 121,
+    "nom": "Sephora Marseille Vieux-Port 2",
+    "adresse": "45 Quai du Port",
+    "pays": "FR",
+    "region": "PACA",
+    "surface": 180,
+    "date_ouverture": "2025-01-10",
+    "statut": "OUVERT",
+    "nb_employes": 22
+  },
+  {
+    "action": "INSERT",
+    "timestamp": "2025-01-15T10:35:00Z",
+    "id": 122,
+    "nom": "Sephora Dubai Creek Harbour",
+    "adresse": "12 Waterfront Promenade",
+    "pays": "AE",
+    "region": "Dubai",
+    "surface": 320,
+    "date_ouverture": "2025-01-05",
+    "statut": "OUVERT",
+    "nb_employes": 35
+  },
+  {
+    "action": "INSERT",
+    "timestamp": "2025-01-16T09:00:00Z",
+    "id": 123,
+    "nom": "Sephora Lyon Bellecour",
+    "adresse": "8 Place Bellecour",
+    "pays": "FR",
+    "region": "Auvergne-Rhone-Alpes",
+    "surface": 210,
+    "date_ouverture": "2025-01-12",
+    "statut": "OUVERT",
+    "nb_employes": 18
+  },
+  {
+    "action": "UPDATE",
+    "timestamp": "2025-01-15T11:00:00Z",
+    "id": 3,
+    "statut": "RENOVATION",
+    "nb_employes": 12
+  },
+  {
+    "action": "UPDATE",
+    "timestamp": "2025-01-15T11:15:00Z",
+    "id": 7,
+    "surface": 420,
+    "nb_employes": 55
+  },
+  {
+    "action": "UPDATE",
+    "timestamp": "2025-01-16T14:00:00Z",
+    "id": 15,
+    "statut": "FERME_TEMPORAIRE"
+  },
+  {
+    "action": "UPDATE",
+    "timestamp": "2025-01-16T14:30:00Z",
+    "id": 22,
+    "nom": "Sephora Bordeaux Sainte-Catherine Flagship",
+    "surface": 580
+  },
+  {
+    "action": "DELETE",
+    "timestamp": "2025-01-15T12:00:00Z",
+    "id": 45
+  },
+  {
+    "action": "DELETE",
+    "timestamp": "2025-01-16T16:00:00Z",
+    "id": 78
+  }
+]

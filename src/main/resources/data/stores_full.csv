@@ -1,0 +1,121 @@
+id,nom,adresse,pays,region,surface,date_ouverture,statut,nb_employes
+1,"Sephora Paris Champs-Elysees","65 Avenue de la Republique",FR,Ile-de-France,260,2022-10-20,OUVERT,36
+2,"Sephora Paris Rivoli","184 Avenue de la Republique",FR,Ile-de-France,492,2021-07-14,OUVERT,62
+3,"Sephora Paris Haussmann","184 Place Centrale",FR,Ile-de-France,296,2008-01-17,OUVERT,75
+4,"Sephora Paris Bercy","41 Rue du Commerce",FR,Ile-de-France,494,1998-02-18,FERME_TEMPORAIRE,83
+5,"Sephora La Defense","245 Rue du Commerce",FR,Ile-de-France,501,2002-09-02,OUVERT,67
+6,"Sephora Versailles","212 Main Road",FR,Ile-de-France,296,2006-04-18,OUVERT,25
+7,"Sephora Creteil Soleil","214 Rue du Commerce",FR,Ile-de-France,460,2002-06-13,OUVERT,60
+8,"Sephora Velizy 2","75 Avenue de la Republique",FR,Ile-de-France,504,2007-03-20,FERME_TEMPORAIRE,81
+9,"Sephora Rosny 2","43 Main Road",FR,Ile-de-France,115,2011-10-01,OUVERT,30
+10,"Sephora Parly 2","18 Galerie Marchande",FR,Ile-de-France,236,2004-09-07,OUVERT,34
+11,"Sephora Marseille Vieux-Port","25 Place Centrale",FR,PACA,473,2003-01-23,OUVERT,13
+12,"Sephora Marseille Terrasses du Port","240 Passage des Arts",FR,PACA,506,2024-11-22,RENOVATION,14
+13,"Sephora Nice Massena","119 Main Road",FR,PACA,619,2005-03-25,RENOVATION,65
+14,"Sephora Cannes Croisette","178 Place Centrale",FR,PACA,620,2007-01-25,OUVERT,82
+15,"Sephora Aix-en-Provence","120 Avenue de la Republique",FR,PACA,88,2023-04-28,RENOVATION,75
+16,"Sephora Toulon Grand Var","29 Main Road",FR,PACA,161,2009-08-01,OUVERT,7
+17,"Sephora Avignon Cap Sud","60 Main Road",FR,PACA,509,2010-08-22,OUVERT,40
+18,"Sephora Lyon Part-Dieu","28 Boulevard Principal",FR,Auvergne-Rhone-Alpes,512,1998-09-04,FERME_TEMPORAIRE,8
+19,"Sephora Lyon Confluence","160 Avenue de la Republique",FR,Auvergne-Rhone-Alpes,357,2000-05-21,OUVERT,55
+20,"Sephora Grenoble Grand Place","152 Passage des Arts",FR,Auvergne-Rhone-Alpes,387,2019-11-09,OUVERT,15
+21,"Sephora Saint-Etienne Centre","191 Avenue de la Republique",FR,Auvergne-Rhone-Alpes,107,2023-02-14,OUVERT,70
+22,"Sephora Clermont-Ferrand Jaude","236 Passage des Arts",FR,Auvergne-Rhone-Alpes,491,2015-01-22,OUVERT,5
+23,"Sephora Annecy Courier","96 Avenue de la Republique",FR,Auvergne-Rhone-Alpes,388,2016-02-06,OUVERT,44
+24,"Sephora Bordeaux Sainte-Catherine","41 High Street",FR,Nouvelle-Aquitaine,601,2018-11-24,OUVERT,42
+25,"Sephora Bordeaux Lac","196 Galerie Marchande",FR,Nouvelle-Aquitaine,595,2015-03-04,OUVERT,44
+26,"Sephora Limoges Centre","63 Avenue de la Republique",FR,Nouvelle-Aquitaine,602,2016-01-09,FERME_TEMPORAIRE,55
+27,"Sephora Pau Quartier Libre","211 Avenue de la Republique",FR,Nouvelle-Aquitaine,222,2016-05-24,OUVERT,60
+28,"Sephora La Rochelle Les Minimes","208 Boulevard Principal",FR,Nouvelle-Aquitaine,180,2015-02-16,OUVERT,30
+29,"Sephora Toulouse Capitole","1 Place Centrale",FR,Occitanie,534,2001-05-06,OUVERT,70
+30,"Sephora Toulouse Blagnac","56 Passage des Arts",FR,Occitanie,525,1998-10-24,OUVERT,12
+31,"Sephora Montpellier Odysseum","241 Passage des Arts",FR,Occitanie,116,2008-03-10,OUVERT,71
+32,"Sephora Perpignan Polygone","138 Boulevard Principal",FR,Occitanie,172,1998-12-28,OUVERT,17
+33,"Sephora Nimes Ville Active","61 Rue du Commerce",FR,Occitanie,304,2021-01-24,RENOVATION,6
+34,"Sephora Lille Euralille","142 Main Road",FR,Hauts-de-France,241,2013-05-28,OUVERT,80
+35,"Sephora Lille Grand Place","154 Boulevard Principal",FR,Hauts-de-France,422,2015-08-17,FERME_TEMPORAIRE,15
+36,"Sephora Amiens Glisy","127 Passage des Arts",FR,Hauts-de-France,480,2002-05-22,OUVERT,16
+37,"Sephora Valenciennes Place d'Armes","54 High Street",FR,Hauts-de-France,441,2003-08-25,RENOVATION,30
+38,"Sephora Strasbourg Place Kleber","35 Galerie Marchande",FR,Grand-Est,150,2012-10-13,OUVERT,11
+39,"Sephora Strasbourg Rivetoile","214 Rue du Commerce",FR,Grand-Est,100,2009-05-28,RENOVATION,66
+40,"Sephora Metz Saint-Jacques","249 Place Centrale",FR,Grand-Est,494,2024-01-24,OUVERT,79
+41,"Sephora Nancy Saint-Sebastien","246 High Street",FR,Grand-Est,370,2013-07-01,OUVERT,78
+42,"Sephora Reims Thillois","7 Main Road",FR,Grand-Est,400,2015-03-18,OUVERT,54
+43,"Sephora Rennes Alma","101 Rue du Commerce",FR,Bretagne,527,2018-09-01,FERME_TEMPORAIRE,63
+44,"Sephora Brest Jean Jaures","52 Avenue de la Republique",FR,Bretagne,434,2012-05-24,OUVERT,55
+45,"Sephora Vannes Luscanen","143 Passage des Arts",FR,Bretagne,346,2005-06-22,OUVERT,7
+46,"Sephora Saint-Malo Grand Quartier","66 Main Road",FR,Bretagne,273,2012-07-22,OUVERT,22
+47,"Sephora Rouen Grands Quais","40 Avenue de la Republique",FR,Normandie,491,2015-11-09,OUVERT,25
+48,"Sephora Caen Cote de Nacre","122 High Street",FR,Normandie,267,2020-02-01,OUVERT,58
+49,"Sephora Le Havre Docks Vauban","183 Boulevard Principal",FR,Normandie,335,2007-08-03,OUVERT,33
+50,"Sephora Nantes Atlantis","19 Galerie Marchande",FR,Pays de la Loire,144,2016-02-16,OUVERT,71
+51,"Sephora Nantes Graslin","33 Place Centrale",FR,Pays de la Loire,334,2017-02-03,OUVERT,49
+52,"Sephora Angers Atoll","63 Galerie Marchande",FR,Pays de la Loire,180,2013-10-14,FERME_TEMPORAIRE,69
+53,"Sephora Le Mans Centre","184 Place Centrale",FR,Pays de la Loire,469,2014-09-05,OUVERT,49
+54,"Sephora Barcelona Passeig de Gracia","130 Galerie Marchande",ES,Cataluna,455,1998-11-19,OUVERT,5
+55,"Sephora Barcelona La Rambla","185 Boulevard Principal",ES,Cataluna,175,2012-07-04,OUVERT,46
+56,"Sephora Madrid Gran Via","45 Place Centrale",ES,Madrid,91,2016-12-22,OUVERT,56
+57,"Sephora Madrid Xanadu","210 Boulevard Principal",ES,Madrid,308,2009-01-11,OUVERT,14
+58,"Sephora Sevilla Nervion","167 Main Road",ES,Andalucia,201,2016-02-15,OUVERT,25
+59,"Sephora Malaga Larios","148 Rue du Commerce",ES,Andalucia,480,2023-10-13,OUVERT,57
+60,"Sephora Valencia Colon","221 Boulevard Principal",ES,Valencia,342,2016-10-21,RENOVATION,76
+61,"Sephora Bilbao Gran Via","14 High Street",ES,Pais Vasco,307,2005-02-20,OUVERT,39
+62,"Sephora Milano Duomo","250 Passage des Arts",IT,Lombardia,633,1998-05-26,OUVERT,61
+63,"Sephora Milano Vittorio Emanuele","162 Main Road",IT,Lombardia,628,2006-06-20,OUVERT,17
+64,"Sephora Roma Via del Corso","38 Passage des Arts",IT,Lazio,255,2002-02-18,OUVERT,9
+65,"Sephora Roma Termini","160 Boulevard Principal",IT,Lazio,272,2000-03-27,OUVERT,34
+66,"Sephora Firenze Via Calzaiuoli","57 Passage des Arts",IT,Toscana,609,2020-02-28,OUVERT,70
+67,"Sephora Napoli Via Toledo","54 Galerie Marchande",IT,Campania,617,2018-02-24,OUVERT,79
+68,"Sephora Venezia San Marco","147 Place Centrale",IT,Veneto,388,2006-12-03,OUVERT,49
+69,"Sephora Munchen Kaufingerstrasse","216 Place Centrale",DE,Bayern,531,2012-08-18,OUVERT,18
+70,"Sephora Munchen Riem Arcaden","244 Passage des Arts",DE,Bayern,209,2019-07-26,FERME_TEMPORAIRE,58
+71,"Sephora Berlin Kurfurstendamm","156 Passage des Arts",DE,Berlin,419,2023-12-26,OUVERT,56
+72,"Sephora Berlin Alexanderplatz","103 Boulevard Principal",DE,Berlin,641,2001-07-13,OUVERT,11
+73,"Sephora Koln Schildergasse","164 Avenue de la Republique",DE,Nordrhein-Westfalen,642,2009-02-15,OUVERT,13
+74,"Sephora Dusseldorf Schadowstrasse","8 Passage des Arts",DE,Nordrhein-Westfalen,110,2001-03-02,OUVERT,66
+75,"Sephora Hamburg Europapassage","26 Boulevard Principal",DE,Hamburg,256,2023-05-09,RENOVATION,23
+76,"Sephora Frankfurt MyZeil","62 Avenue de la Republique",DE,Hessen,285,2010-08-06,OUVERT,50
+77,"Sephora London Oxford Street","206 Avenue de la Republique",UK,London,213,2012-11-04,OUVERT,73
+78,"Sephora London Westfield","111 Rue du Commerce",UK,London,227,2018-05-06,OUVERT,84
+79,"Sephora London Covent Garden","200 High Street",UK,London,279,2022-10-20,OUVERT,27
+80,"Sephora Manchester Trafford Centre","45 Place Centrale",UK,Manchester,194,2023-05-12,FERME_TEMPORAIRE,21
+81,"Sephora Birmingham Bullring","5 Rue du Commerce",UK,Birmingham,338,2022-04-19,OUVERT,81
+82,"Sephora Edinburgh Princes Street","230 Galerie Marchande",UK,Edinburgh,228,2015-05-13,OUVERT,43
+83,"Sephora Bristol Cabot Circus","191 Main Road",UK,Bristol,545,2016-04-19,OUVERT,42
+84,"Sephora New York 5th Avenue","9 Place Centrale",US,New York,186,2017-02-13,FERME_TEMPORAIRE,55
+85,"Sephora New York Times Square","181 Rue du Commerce",US,New York,385,2008-11-09,OUVERT,56
+86,"Sephora New York SoHo","237 High Street",US,New York,425,2018-10-13,OUVERT,11
+87,"Sephora Los Angeles Beverly Hills","215 High Street",US,California,533,2019-03-09,OUVERT,54
+88,"Sephora San Francisco Union Square","103 Boulevard Principal",US,California,529,2016-05-16,OUVERT,60
+89,"Sephora Houston Galleria","162 Main Road",US,Texas,179,1999-10-17,OUVERT,56
+90,"Sephora Dallas NorthPark","38 Rue du Commerce",US,Texas,317,2008-05-27,OUVERT,18
+91,"Sephora Miami Design District","60 Galerie Marchande",US,Florida,105,2015-08-09,OUVERT,32
+92,"Sephora Orlando Mall at Millenia","247 Main Road",US,Florida,293,2011-05-07,RENOVATION,79
+93,"Sephora Chicago Michigan Avenue","37 Place Centrale",US,Illinois,431,2015-02-05,OUVERT,5
+94,"Sephora Dubai Mall","33 Avenue de la Republique",AE,Dubai,207,2008-12-14,OUVERT,15
+95,"Sephora Mall of the Emirates","108 Boulevard Principal",AE,Dubai,322,2011-11-07,FERME_TEMPORAIRE,83
+96,"Sephora Dubai Marina Mall","241 Rue du Commerce",AE,Dubai,403,2009-06-03,OUVERT,21
+97,"Sephora Abu Dhabi Yas Mall","171 Main Road",AE,Abu Dhabi,272,2012-05-16,OUVERT,29
+98,"Sephora Sharjah Sahara Centre","1 Galerie Marchande",AE,Sharjah,552,2016-04-26,OUVERT,26
+99,"Sephora Shanghai Nanjing Road","8 Rue du Commerce",CN,Shanghai,396,2000-08-22,OUVERT,21
+100,"Sephora Shanghai IFC Mall","106 Main Road",CN,Shanghai,619,2016-02-13,RENOVATION,73
+101,"Sephora Beijing SKP","59 Avenue de la Republique",CN,Beijing,541,2012-11-02,OUVERT,21
+102,"Sephora Beijing Wangfujing","60 Rue du Commerce",CN,Beijing,352,2019-09-21,OUVERT,32
+103,"Sephora Guangzhou Taikoo Hui","111 Place Centrale",CN,Guangzhou,472,2010-07-14,FERME_TEMPORAIRE,68
+104,"Sephora Shenzhen MixC","79 High Street",CN,Shenzhen,560,2003-01-17,OUVERT,21
+105,"Sephora Chengdu IFS","205 Main Road",CN,Chengdu,322,2011-08-21,OUVERT,14
+106,"Sephora Dubai 105","277 Rue Principale",AE,Dubai,220,2024-11-22,RENOVATION,37
+107,"Sephora Florida 106","112 Rue Principale",US,Florida,130,2005-11-16,RENOVATION,29
+108,"Sephora Auvergne-Rhone-Alpes 107","103 Rue Principale",FR,Auvergne-Rhone-Alpes,310,2008-01-03,OUVERT,22
+109,"Sephora Sharjah 108","111 Rue Principale",AE,Sharjah,293,2017-01-18,FERME_TEMPORAIRE,22
+110,"Sephora Shanghai 109","126 Rue Principale",CN,Shanghai,280,2016-04-20,OUVERT,26
+111,"Sephora Abu Dhabi 110","225 Rue Principale",AE,Abu Dhabi,394,2005-10-28,RENOVATION,10
+112,"Sephora Bayern 111","19 Rue Principale",DE,Bayern,157,2021-05-01,OUVERT,33
+113,"Sephora Toscana 112","35 Rue Principale",IT,Toscana,272,2011-02-09,OUVERT,34
+114,"Sephora Campania 113","193 Rue Principale",IT,Campania,360,2024-09-21,OUVERT,24
+115,"Sephora Chengdu 114","30 Rue Principale",CN,Chengdu,214,2010-04-12,OUVERT,29
+116,"Sephora Abu Dhabi 115","6 Rue Principale",AE,Abu Dhabi,268,2017-04-20,OUVERT,46
+117,"Sephora Lombardia 116","73 Rue Principale",IT,Lombardia,234,2018-06-26,OUVERT,23
+118,"Sephora Illinois 117","143 Rue Principale",US,Illinois,103,2014-10-20,OUVERT,22
+119,"Sephora Dubai 118","47 Rue Principale",AE,Dubai,319,2007-10-12,OUVERT,33
+120,"Sephora California 119","134 Rue Principale",US,California,139,2006-08-02,OUVERT,40

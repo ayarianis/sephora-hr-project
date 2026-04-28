@@ -1,0 +1,110 @@
+[
+  {
+    "action": "INSERT",
+    "timestamp": "2025-02-01T09:00:00Z",
+    "id": 810,
+    "nom": "Dupont",
+    "prenom": "Sophie",
+    "store_id": 1,
+    "poste": "Conseiller(e) Beaute",
+    "departement": "Vente",
+    "date_embauche": "2025-01-28",
+    "type_contrat": "CDI",
+    "salaire_brut": 25500
+  },
+  {
+    "action": "INSERT",
+    "timestamp": "2025-02-01T09:05:00Z",
+    "id": 811,
+    "nom": "Benali",
+    "prenom": "Yasmina",
+    "store_id": 5,
+    "poste": "Chef de Rayon",
+    "departement": "Management",
+    "date_embauche": "2025-02-01",
+    "type_contrat": "CDI",
+    "salaire_brut": 34000
+  },
+  {
+    "action": "INSERT",
+    "timestamp": "2025-02-01T09:10:00Z",
+    "id": 812,
+    "nom": "Garcia",
+    "prenom": "Pablo",
+    "store_id": 12,
+    "poste": "Stockiste",
+    "departement": "Logistique",
+    "date_embauche": "2025-01-20",
+    "type_contrat": "CDD",
+    "salaire_brut": 22000
+  },
+  {
+    "action": "INSERT",
+    "timestamp": "2025-02-03T08:30:00Z",
+    "id": 813,
+    "nom": "Leclerc",
+    "prenom": "Margaux",
+    "store_id": 3,
+    "poste": "Alternance Conseiller(e) Beaute",
+    "departement": "Vente",
+    "date_embauche": "2025-02-03",
+    "type_contrat": "Alternance",
+    "salaire_brut": 15600
+  },
+  {
+    "action": "INSERT",
+    "timestamp": "2025-02-03T08:35:00Z",
+    "id": 814,
+    "nom": "Nguyen",
+    "prenom": "Linh",
+    "store_id": 8,
+    "poste": "Visual Merchandiser",
+    "departement": "Marketing",
+    "date_embauche": "2025-02-03",
+    "type_contrat": "CDI",
+    "salaire_brut": 31000
+  },
+  {
+    "action": "UPDATE",
+    "timestamp": "2025-02-01T10:00:00Z",
+    "id": 5,
+    "poste": "Chef de Rayon",
+    "departement": "Management",
+    "salaire_brut": 33000
+  },
+  {
+    "action": "UPDATE",
+    "timestamp": "2025-02-01T10:15:00Z",
+    "id": 12,
+    "salaire_brut": 28500
+  },
+  {
+    "action": "UPDATE",
+    "timestamp": "2025-02-02T14:00:00Z",
+    "id": 25,
+    "poste": "Responsable Magasin",
+    "departement": "Direction",
+    "salaire_brut": 42000
+  },
+  {
+    "action": "UPDATE",
+    "timestamp": "2025-02-03T09:00:00Z",
+    "id": 30,
+    "store_id": 15
+  },
+  {
+    "action": "DELETE",
+    "timestamp": "2025-02-01T11:00:00Z",
+    "id": 42
+  },
+  {
+    "action": "DELETE",
+    "timestamp": "2025-02-02T16:00:00Z",
+    "id": 67
+  },
+  {
+    "action": "DELETE",
+    "timestamp": "2025-02-03T17:00:00Z",
+    "id": 88
+  }
+]
