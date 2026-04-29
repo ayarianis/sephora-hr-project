@@ -12,7 +12,7 @@ from airflow.providers.google.cloud.operators.dataform import (
     DataformCreateWorkflowInvocationOperator,
 )
 
-CONFIG_PATH = Path(__file__).resolve().parent / "hr_flow_config.json"
+CONFIG_PATH = Path(__file__).resolve().parent / "rh_flow_config.json"
 
 with open(CONFIG_PATH, "r", encoding="utf-8") as f:
     CFG = json.load(f)
