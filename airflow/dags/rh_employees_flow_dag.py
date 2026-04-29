@@ -13,7 +13,7 @@ from airflow.providers.google.cloud.operators.dataform import (
 from airflow.providers.apache.beam.operators.beam import BeamRunJavaPipelineOperator
 from airflow.providers.google.cloud.operators.dataflow import DataflowConfiguration
 
-CONFIG_PATH = Path(__file__).resolve().parent / "config" / "hr_flow_config.json"
+CONFIG_PATH = Path(__file__).resolve().parent / "config" / "rh_flow_config.json"
 
 with open(CONFIG_PATH, "r", encoding="utf-8") as f:
     CFG = json.load(f)
@@ -27,11 +27,11 @@ def choose_mode(**context):
 
 
 with DAG(
-    dag_id="hr_employees_flow",
+    dag_id="rh_employees_flow",
     start_date=datetime(2025, 1, 1),
     schedule_interval=None,
     catchup=False,
-    tags=["hr", "employees"],
+    tags=["rh", "employees"],
 ) as dag:
 
     branch_mode = BranchPythonOperator(
@@ -70,7 +70,7 @@ with DAG(
             "writeDispositionValue": "WRITE_TRUNCATE"
         },
         dataflow_config=DataflowConfiguration(
-            job_name="hr-employees-full",
+            job_name="rh-employees-full",
             location=CFG["region"],
             gcp_conn_id=CFG["gcp_conn_id"],
             wait_until_finished=True
@@ -94,7 +94,7 @@ with DAG(
             "writeDispositionValue": "WRITE_APPEND"
         },
         dataflow_config=DataflowConfiguration(
-            job_name="hr-employees-delta",
+            job_name="rh-employees-delta",
             location=CFG["region"],
             gcp_conn_id=CFG["gcp_conn_id"],
             wait_until_finished=True

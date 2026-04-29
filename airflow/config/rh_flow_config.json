@@ -4,7 +4,7 @@
   "bq_location": "US",
   "gcp_conn_id": "google_cloud_default",
 
-  "bucket": "your-hr-bucket",
+  "bucket": "raw-sephora-rh-aayari",
   "jar_gcs_path": "gs://sephora-artifact/jars/sephora-data-platform.jar",
 
   "employees_full_input": "gs://raw-sephora-rh-aayari/full/employees_full.csv",
