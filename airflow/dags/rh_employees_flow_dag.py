@@ -42,15 +42,13 @@ with DAG(
     wait_for_employees_full = GCSObjectExistenceSensor(
         task_id="wait_for_employees_full",
         bucket=CFG["bucket"],
-        object="full/employees_full.csv",
-        gcp_conn_id=CFG["gcp_conn_id"]
+        object="full/employees_full.csv"
     )
 
     wait_for_employees_delta = GCSObjectExistenceSensor(
         task_id="wait_for_employees_delta",
         bucket=CFG["bucket"],
-        object="delta/employees_delta.json",
-        gcp_conn_id=CFG["gcp_conn_id"]
+        object="delta/employees_delta.json"
     )
 
     run_employees_full_dataflow = BeamRunJavaPipelineOperator(
@@ -72,7 +70,6 @@ with DAG(
         dataflow_config=DataflowConfiguration(
             job_name="rh-employees-full",
             location=CFG["region"],
-            gcp_conn_id=CFG["gcp_conn_id"],
             wait_until_finished=True
         )
     )
@@ -96,14 +93,12 @@ with DAG(
         dataflow_config=DataflowConfiguration(
             job_name="rh-employees-delta",
             location=CFG["region"],
-            gcp_conn_id=CFG["gcp_conn_id"],
             wait_until_finished=True
         )
     )
 
     merge_employees_delta = BigQueryInsertJobOperator(
         task_id="merge_employees_delta",
-        gcp_conn_id=CFG["gcp_conn_id"],
         location=CFG["bq_location"],
         configuration={
             "query": {
@@ -162,7 +157,6 @@ WHEN NOT MATCHED AND S.delta_action = 'INSERT' THEN
 
     create_dataform_compilation = DataformCreateCompilationResultOperator(
         task_id="create_dataform_compilation",
-        gcp_conn_id=CFG["gcp_conn_id"],
         project_id=CFG["project_id"],
         region=CFG["region"],
         repository_id=CFG["dataform_repository_id"],
@@ -173,7 +167,6 @@ WHEN NOT MATCHED AND S.delta_action = 'INSERT' THEN
 
     run_dataform_workflow = DataformCreateWorkflowInvocationOperator(
         task_id="run_dataform_workflow",
-        gcp_conn_id=CFG["gcp_conn_id"],
         project_id=CFG["project_id"],
         region=CFG["region"],
         repository_id=CFG["dataform_repository_id"],

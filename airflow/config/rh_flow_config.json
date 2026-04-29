@@ -2,7 +2,6 @@
   "project_id": "sephora-rh-project",
   "region": "us-central1",
   "bq_location": "US",
-  "gcp_conn_id": "google_cloud_default",
 
   "bucket": "raw-sephora-rh-aayari",
   "jar_gcs_path": "gs://sephora-artifact/jars/sephora-data-platform.jar",
