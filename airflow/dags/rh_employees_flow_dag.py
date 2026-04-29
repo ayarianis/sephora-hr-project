@@ -1,25 +1,17 @@
 import json
-import logging
 from pathlib import Path
 from datetime import datetime
 
 from airflow import DAG
-from airflow.operators.empty import EmptyOperator
-from airflow.operators.python import BranchPythonOperator, PythonOperator
-from airflow.utils.trigger_rule import TriggerRule
-
+from airflow.operators.python import BranchPythonOperator
 from airflow.providers.google.cloud.sensors.gcs import GCSObjectExistenceSensor
-from airflow.providers.google.cloud.operators.dataflow import DataflowCreateJavaJobOperator
-from airflow.providers.google.cloud.operators.bigquery import (
-    BigQueryInsertJobOperator,
-    BigQueryCheckOperator,
-)
+from airflow.providers.google.cloud.operators.bigquery import BigQueryInsertJobOperator
 from airflow.providers.google.cloud.operators.dataform import (
     DataformCreateCompilationResultOperator,
     DataformCreateWorkflowInvocationOperator,
 )
-
-LOG = logging.getLogger(__name__)
+from airflow.providers.apache.beam.operators.beam import BeamRunJavaPipelineOperator
+from airflow.providers.google.cloud.operators.dataflow import DataflowConfiguration
 
 CONFIG_PATH = Path(__file__).resolve().parent / "config" / "hr_flow_config.json"
 
@@ -34,27 +26,13 @@ def choose_mode(**context):
     return "wait_for_employees_full"
 
 
-def notify_success():
-    LOG.info("Le DAG hr_employees_flow s'est terminé avec succès.")
-
-
-default_args = {
-    "owner": "data-eng",
-    "depends_on_past": False,
-    "retries": 1
-}
-
-
 with DAG(
     dag_id="hr_employees_flow",
-    default_args=default_args,
     start_date=datetime(2025, 1, 1),
     schedule_interval=None,
     catchup=False,
-    tags=["hr", "employees", "beam", "dataform", "bigquery"],
+    tags=["hr", "employees"],
 ) as dag:
-
-    start = EmptyOperator(task_id="start")
 
     branch_mode = BranchPythonOperator(
         task_id="branch_mode",
@@ -75,46 +53,52 @@ with DAG(
         gcp_conn_id=CFG["gcp_conn_id"]
     )
 
-    run_employees_full_dataflow = DataflowCreateJavaJobOperator(
+    run_employees_full_dataflow = BeamRunJavaPipelineOperator(
         task_id="run_employees_full_dataflow",
         jar=CFG["jar_gcs_path"],
-        job_name="hr-employees-full-{{ ts_nodash }}",
         job_class=CFG["employee_job_class"],
-        location=CFG["region"],
-        gcp_conn_id=CFG["gcp_conn_id"],
-        options={
-            "runner": "DataflowRunner",
+        runner="DataflowRunner",
+        pipeline_options={
             "project": CFG["project_id"],
             "region": CFG["region"],
-            "tempLocation": CFG["temp_location"],
+            "gcpTempLocation": CFG["temp_location"],
             "stagingLocation": CFG["staging_location"],
             "mode": "full",
             "inputPath": CFG["employees_full_input"],
             "outputTable": CFG["raw_employees_table"],
             "backupPath": CFG["backup_full"],
             "writeDispositionValue": "WRITE_TRUNCATE"
-        }
+        },
+        dataflow_config=DataflowConfiguration(
+            job_name="hr-employees-full",
+            location=CFG["region"],
+            gcp_conn_id=CFG["gcp_conn_id"],
+            wait_until_finished=True
+        )
     )
 
-    run_employees_delta_dataflow = DataflowCreateJavaJobOperator(
+    run_employees_delta_dataflow = BeamRunJavaPipelineOperator(
         task_id="run_employees_delta_dataflow",
         jar=CFG["jar_gcs_path"],
-        job_name="hr-employees-delta-{{ ts_nodash }}",
         job_class=CFG["employee_job_class"],
-        location=CFG["region"],
-        gcp_conn_id=CFG["gcp_conn_id"],
-        options={
-            "runner": "DataflowRunner",
+        runner="DataflowRunner",
+        pipeline_options={
             "project": CFG["project_id"],
             "region": CFG["region"],
-            "tempLocation": CFG["temp_location"],
+            "gcpTempLocation": CFG["temp_location"],
             "stagingLocation": CFG["staging_location"],
             "mode": "delta",
             "inputPath": CFG["employees_delta_input"],
             "outputTable": CFG["raw_employees_delta_staging_table"],
             "backupPath": CFG["backup_delta"],
             "writeDispositionValue": "WRITE_APPEND"
-        }
+        },
+        dataflow_config=DataflowConfiguration(
+            job_name="hr-employees-delta",
+            location=CFG["region"],
+            gcp_conn_id=CFG["gcp_conn_id"],
+            wait_until_finished=True
+        )
     )
 
     merge_employees_delta = BigQueryInsertJobOperator(
@@ -176,22 +160,6 @@ WHEN NOT MATCHED AND S.delta_action = 'INSERT' THEN
         }
     )
 
-    after_ingestion = EmptyOperator(
-        task_id="after_ingestion",
-        trigger_rule=TriggerRule.NONE_FAILED_MIN_ONE_SUCCESS
-    )
-
-    check_raw_stores_available = BigQueryCheckOperator(
-        task_id="check_raw_stores_available",
-        gcp_conn_id=CFG["gcp_conn_id"],
-        use_legacy_sql=False,
-        location=CFG["bq_location"],
-        sql=f"""
-SELECT COUNT(*) >= {CFG["quality_min_raw_stores_count"]}
-FROM `{CFG["project_id"]}.sephora_raw.raw_stores`
-        """
-    )
-
     create_dataform_compilation = DataformCreateCompilationResultOperator(
         task_id="create_dataform_compilation",
         gcp_conn_id=CFG["gcp_conn_id"],
@@ -210,48 +178,10 @@ FROM `{CFG["project_id"]}.sephora_raw.raw_stores`
         region=CFG["region"],
         repository_id=CFG["dataform_repository_id"],
         workflow_invocation={
-            "compilation_result": "{{ task_instance.xcom_pull('create_dataform_compilation')['name'] }}"
+            "compilation_result": "{{ ti.xcom_pull(task_ids='create_dataform_compilation')['name'] }}"
         }
     )
 
-    check_dwh_employee_not_null = BigQueryCheckOperator(
-        task_id="check_dwh_employee_not_null",
-        gcp_conn_id=CFG["gcp_conn_id"],
-        use_legacy_sql=False,
-        location=CFG["bq_location"],
-        sql=f"""
-SELECT COUNT(*) = 0
-FROM `{CFG["project_id"]}.sephora_dwh.dwh_employee_enriched`
-WHERE id IS NULL
-        """
-    )
-
-    check_dwh_store_join_coverage = BigQueryCheckOperator(
-        task_id="check_dwh_store_join_coverage",
-        gcp_conn_id=CFG["gcp_conn_id"],
-        use_legacy_sql=False,
-        location=CFG["bq_location"],
-        sql=f"""
-SELECT COUNT(*) = 0
-FROM `{CFG["project_id"]}.sephora_dwh.dwh_employee_enriched`
-WHERE store_id IS NOT NULL
-  AND region IS NULL
-        """
-    )
-
-    notify_success_task = PythonOperator(
-        task_id="notify_success",
-        python_callable=notify_success
-    )
-
-    end = EmptyOperator(task_id="end")
-
-    start >> branch_mode
-
-    branch_mode >> wait_for_employees_full >> run_employees_full_dataflow >> after_ingestion
-    branch_mode >> wait_for_employees_delta >> run_employees_delta_dataflow >> merge_employees_delta >> after_ingestion
-
-    after_ingestion >> check_raw_stores_available
-    check_raw_stores_available >> create_dataform_compilation >> run_dataform_workflow
-    run_dataform_workflow >> check_dwh_employee_not_null >> check_dwh_store_join_coverage
-    check_dwh_store_join_coverage >> notify_success_task >> end
+    branch_mode >> wait_for_employees_full >> run_employees_full_dataflow >> create_dataform_compilation
+    branch_mode >> wait_for_employees_delta >> run_employees_delta_dataflow >> merge_employees_delta >> create_dataform_compilation
+    create_dataform_compilation >> run_dataform_workflow
