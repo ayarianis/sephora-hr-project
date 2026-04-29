@@ -20,7 +20,10 @@ with open(CONFIG_PATH, "r", encoding="utf-8") as f:
 
 
 def choose_mode(**context):
-    mode = context["dag_run"].conf.get("mode", "full")
+    dag_run = context.get("dag_run")
+    conf = dag_run.conf if dag_run and dag_run.conf else {}
+    mode = conf.get("mode", "full")
+
     if mode == "delta":
         return "wait_for_employees_delta"
     return "wait_for_employees_full"
