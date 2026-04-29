@@ -21,7 +21,7 @@
 
   "employee_job_class": "com.sephora.data.beam.EmployeeIngestionPipeline",
 
-  "dataform_repository_id": "sephora-rh-dataform",
+  "dataform_repository_id": "sephora-rh",
   "dataform_git_ref": "main",
 
   "quality_min_raw_stores_count": 1
