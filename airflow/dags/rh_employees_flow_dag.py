@@ -5,28 +5,26 @@ from datetime import datetime
 from airflow import DAG
 from airflow.operators.python import BranchPythonOperator
 from airflow.providers.google.cloud.sensors.gcs import GCSObjectExistenceSensor
+from airflow.providers.google.cloud.operators.dataflow import DataflowStartFlexTemplateOperator
 from airflow.providers.google.cloud.operators.bigquery import BigQueryInsertJobOperator
 from airflow.providers.google.cloud.operators.dataform import (
     DataformCreateCompilationResultOperator,
     DataformCreateWorkflowInvocationOperator,
 )
-from airflow.providers.apache.beam.operators.beam import BeamRunJavaPipelineOperator
-from airflow.providers.google.cloud.operators.dataflow import DataflowConfiguration
 
-CONFIG_PATH = Path(__file__).resolve().parent / "config" / "rh_flow_config.json"
+CONFIG_PATH = Path(__file__).resolve().parent / "hr_flow_config.json"
 
 with open(CONFIG_PATH, "r", encoding="utf-8") as f:
     CFG = json.load(f)
+
+EMP = CFG["employees"]
 
 
 def choose_mode(**context):
     dag_run = context.get("dag_run")
     conf = dag_run.conf if dag_run and dag_run.conf else {}
     mode = conf.get("mode", "full")
-
-    if mode == "delta":
-        return "wait_for_employees_delta"
-    return "wait_for_employees_full"
+    return "wait_for_employees_full" if mode == "full" else "wait_for_employees_delta"
 
 
 with DAG(
@@ -34,7 +32,7 @@ with DAG(
     start_date=datetime(2025, 1, 1),
     schedule_interval=None,
     catchup=False,
-    tags=["rh", "employees"],
+    tags=["employees"],
 ) as dag:
 
     branch_mode = BranchPythonOperator(
@@ -45,59 +43,59 @@ with DAG(
     wait_for_employees_full = GCSObjectExistenceSensor(
         task_id="wait_for_employees_full",
         bucket=CFG["bucket"],
-        object="full/employees_full.csv"
+        object=EMP["full_object"]
     )
 
     wait_for_employees_delta = GCSObjectExistenceSensor(
         task_id="wait_for_employees_delta",
         bucket=CFG["bucket"],
-        object="delta/employees_delta.json"
+        object=EMP["delta_object"]
     )
 
-    run_employees_full_dataflow = BeamRunJavaPipelineOperator(
-        task_id="run_employees_full_dataflow",
-        jar=CFG["jar_gcs_path"],
-        job_class=CFG["employee_job_class"],
-        runner="DataflowRunner",
-        pipeline_options={
-            "project": CFG["project_id"],
-            "region": CFG["region"],
-            "gcpTempLocation": CFG["temp_location"],
-            "stagingLocation": CFG["staging_location"],
-            "mode": "full",
-            "inputPath": CFG["employees_full_input"],
-            "outputTable": CFG["raw_employees_table"],
-            "backupPath": CFG["backup_full"],
-            "writeDispositionValue": "WRITE_TRUNCATE"
-        },
-        dataflow_config=DataflowConfiguration(
-            job_name="rh-employees-full",
-            location=CFG["region"],
-            wait_until_finished=True
-        )
+    run_employees_full = DataflowStartFlexTemplateOperator(
+        task_id="run_employees_full",
+        project_id=CFG["project_id"],
+        location=CFG["region"],
+        body={
+            "launchParameter": {
+                "jobName": "employees-full-{{ ts_nodash }}",
+                "containerSpecGcsPath": EMP["flex_template_path"],
+                "parameters": {
+                    "mode": "full",
+                    "inputPath": EMP["full_input"],
+                    "outputTable": EMP["full_output_table"],
+                    "backupPath": EMP["backup_full"],
+                    "writeDispositionValue": "WRITE_TRUNCATE",
+                    "project": CFG["project_id"],
+                    "region": CFG["region"],
+                    "gcpTempLocation": CFG["temp_location"],
+                    "stagingLocation": CFG["staging_location"]
+                }
+            }
+        }
     )
 
-    run_employees_delta_dataflow = BeamRunJavaPipelineOperator(
-        task_id="run_employees_delta_dataflow",
-        jar=CFG["jar_gcs_path"],
-        job_class=CFG["employee_job_class"],
-        runner="DataflowRunner",
-        pipeline_options={
-            "project": CFG["project_id"],
-            "region": CFG["region"],
-            "gcpTempLocation": CFG["temp_location"],
-            "stagingLocation": CFG["staging_location"],
-            "mode": "delta",
-            "inputPath": CFG["employees_delta_input"],
-            "outputTable": CFG["raw_employees_delta_staging_table"],
-            "backupPath": CFG["backup_delta"],
-            "writeDispositionValue": "WRITE_APPEND"
-        },
-        dataflow_config=DataflowConfiguration(
-            job_name="rh-employees-delta",
-            location=CFG["region"],
-            wait_until_finished=True
-        )
+    run_employees_delta = DataflowStartFlexTemplateOperator(
+        task_id="run_employees_delta",
+        project_id=CFG["project_id"],
+        location=CFG["region"],
+        body={
+            "launchParameter": {
+                "jobName": "employees-delta-{{ ts_nodash }}",
+                "containerSpecGcsPath": EMP["flex_template_path"],
+                "parameters": {
+                    "mode": "delta",
+                    "inputPath": EMP["delta_input"],
+                    "outputTable": EMP["delta_output_table"],
+                    "backupPath": EMP["backup_delta"],
+                    "writeDispositionValue": "WRITE_APPEND",
+                    "project": CFG["project_id"],
+                    "region": CFG["region"],
+                    "gcpTempLocation": CFG["temp_location"],
+                    "stagingLocation": CFG["staging_location"]
+                }
+            }
+        }
     )
 
     merge_employees_delta = BigQueryInsertJobOperator(
@@ -105,54 +103,7 @@ with DAG(
         location=CFG["bq_location"],
         configuration={
             "query": {
-                "query": f"""
-MERGE `{CFG["project_id"]}.sephora_raw.raw_employees` T
-USING (
-  SELECT *
-  FROM `{CFG["project_id"]}.sephora_raw.raw_employees_delta_staging`
-  QUALIFY ROW_NUMBER() OVER (
-    PARTITION BY id
-    ORDER BY event_timestamp DESC, ingestion_ts DESC
-  ) = 1
-) S
-ON T.id = S.id
-
-WHEN MATCHED AND S.delta_action = 'DELETE' THEN
-  UPDATE SET
-    load_mode = S.load_mode,
-    delta_action = S.delta_action,
-    event_timestamp = S.event_timestamp,
-    is_deleted = TRUE,
-    ingestion_ts = S.ingestion_ts
-
-WHEN MATCHED AND S.delta_action = 'UPDATE' THEN
-  UPDATE SET
-    nom = COALESCE(S.nom, T.nom),
-    prenom = COALESCE(S.prenom, T.prenom),
-    store_id = COALESCE(S.store_id, T.store_id),
-    poste = COALESCE(S.poste, T.poste),
-    departement = COALESCE(S.departement, T.departement),
-    date_embauche = COALESCE(S.date_embauche, T.date_embauche),
-    type_contrat = COALESCE(S.type_contrat, T.type_contrat),
-    salaire_brut = COALESCE(S.salaire_brut, T.salaire_brut),
-    load_mode = S.load_mode,
-    delta_action = S.delta_action,
-    event_timestamp = S.event_timestamp,
-    is_deleted = FALSE,
-    ingestion_ts = S.ingestion_ts
-
-WHEN NOT MATCHED AND S.delta_action = 'INSERT' THEN
-  INSERT (
-    id, nom, prenom, store_id, poste, departement, date_embauche,
-    type_contrat, salaire_brut, load_mode, delta_action,
-    event_timestamp, is_deleted, ingestion_ts
-  )
-  VALUES (
-    S.id, S.nom, S.prenom, S.store_id, S.poste, S.departement, S.date_embauche,
-    S.type_contrat, S.salaire_brut, S.load_mode, S.delta_action,
-    S.event_timestamp, FALSE, S.ingestion_ts
-  )
-                """,
+                "query": EMP["merge_sql"],
                 "useLegacySql": False
             }
         }
@@ -163,9 +114,7 @@ WHEN NOT MATCHED AND S.delta_action = 'INSERT' THEN
         project_id=CFG["project_id"],
         region=CFG["region"],
         repository_id=CFG["dataform_repository_id"],
-        compilation_result={
-            "git_commitish": CFG["dataform_git_ref"]
-        }
+        compilation_result={"git_commitish": CFG["dataform_git_ref"]}
     )
 
     run_dataform_workflow = DataformCreateWorkflowInvocationOperator(
@@ -178,6 +127,6 @@ WHEN NOT MATCHED AND S.delta_action = 'INSERT' THEN
         }
     )
 
-    branch_mode >> wait_for_employees_full >> run_employees_full_dataflow >> create_dataform_compilation
-    branch_mode >> wait_for_employees_delta >> run_employees_delta_dataflow >> merge_employees_delta >> create_dataform_compilation
+    branch_mode >> wait_for_employees_full >> run_employees_full >> create_dataform_compilation
+    branch_mode >> wait_for_employees_delta >> run_employees_delta >> merge_employees_delta >> create_dataform_compilation
     create_dataform_compilation >> run_dataform_workflow

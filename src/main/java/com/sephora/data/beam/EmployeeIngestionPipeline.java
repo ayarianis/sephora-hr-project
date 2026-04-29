@@ -80,7 +80,7 @@ public class EmployeeIngestionPipeline {
                         .withSuffix(".jsonl")
                         .withoutSharding());
 
-        pipeline.run().waitUntilFinish();
+        pipeline.run();
     }
 
     private static BigQueryIO.Write.WriteDisposition parseWriteDisposition(String value) {
